@@ -11,39 +11,74 @@
   <body>
   <div id='example' style="width: 470px; height: 300px;"></div>
   <div id='gallery' style="width: 470px; height: 300px;"></div>
-  <span id='dataUrl'></span>>
+  <p id='dataUrl'></p>
 
     <pre id="response">Loading...</pre>
-    
+  <!--script src="https://cdn1.lncld.net/static/js/av-mini-0.5.4.js"></script-->
+  <script type="text/javascript" src="/javascripts/av-mini-0.5.4.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
     <script type="text/javascript" src="/javascripts/facepp-sdk.min.js"></script>
     <script type="text/javascript" src="/javascripts/photobooth_min.js"></script>
+  <script type="text/javascript" src="/javascripts/base64.js"></script>
     <script type="text/javascript">
-    	container = document.getElementById( "example" );
-gallery = document.getElementById( "gallery" );
+//     var imgUrl=''
+     var  buffer
+AV.initialize("0wuecmgwc7sg9r1np1eux3yya7lq4k7qenlpmp0qnmsnx3jm", "e65f7h0t6atg0vx1sv2pzpfz671s9ldy0r44w2ig2dgc7ir1");
+     container = document.getElementById( "example" );
+//gallery = document.getElementById( "gallery" );
 
 myPhotobooth = new Photobooth( container );
 
-myPhotobooth.onImage = function( dataUrl ){
-	var myImage = document.createElement( "img" );
-	myImage.src = dataUrl;
-	document.getElementById('dataUrl').value=dataUrl
-	gallery.appendChild( myImage );
-};
+
 
      i =985;
-      function facepp() {
+     var imgUrl ='http://7ktrro.com1.z0.glb.clouddn.com/uniquehackdaythumb_IMG_0'+i+'_1024.jpg'
+    function initapp(){
+        $('.trigger').click()
+        myPhotobooth.onImage = function( dataUrl ){
+
+            imgUrl = dataUrl
+            console.log(imgUrl)
+            console.log('1')
+
+        };
+    }
+     function facepp() {
+
+          $('.trigger').click()
+          myPhotobooth.onImage = function( dataUrl ){
+              var dataString = dataUrl.split( "," )[ 1 ];
+              var extension = dataUrl.match(/\/(.*)\;/)[ 1 ];
+              var avFile = new AV.File("image."+extension, { base64: dataString });
+              avFile.save().then(function() {
+                  imgUrl = avFile.url()
+                  console.log(imgUrl)
+                  console.log('1')
+              }, function(error) {
+                  // The file either could not be read, or could not be saved to AV.
+              });
+
+//              imgUrl = dataString
+
+
+          };
       	if (i>999){
 
       		i =985
       	}
+//        var dataString = document.getElementById('dataUrl').value.split( "," )[ 1 ];
+
         var api = new FacePP('03185d23e0c06c266049f9c6c024dd6a', 'tkDEWxFl7jl9v0ky6g3m2OtGn5KFG0Az');
+          console.log(imgUrl)
+         console.log('2')
+
         api.request('detection/detect', {
-          url: 'http://7ktrro.com1.z0.glb.clouddn.com/uniquehackdaythumb_IMG_0'+i+'_1024.jpg'
+//          url: 'http://7ktrro.com1.z0.glb.clouddn.com/uniquehackdaythumb_IMG_0'+i+'_1024.jpg'
+            url:imgUrl
         }, function(err, result) {
           if (err) {
             // TODO handle error
-            return;
+//            return;
           }
           // TODO use result
           document.getElementById('response').innerHTML = JSON.stringify(result, null, 2);
@@ -51,6 +86,7 @@ myPhotobooth.onImage = function( dataUrl ){
           i++;
         });
       };
+    initapp()
       facepp()
     </script>
   </body>
