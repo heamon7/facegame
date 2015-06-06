@@ -33,61 +33,71 @@ myPhotobooth = new Photobooth( container );
 
      i =985;
      var imgUrl ='http://7ktrro.com1.z0.glb.clouddn.com/uniquehackdaythumb_IMG_0'+i+'_1024.jpg'
-    function initapp(){
-        $('.trigger').click()
-        myPhotobooth.onImage = function( dataUrl ){
 
-            imgUrl = dataUrl
-            console.log(imgUrl)
-            console.log('1')
+//    function initapp(){
+//        $('.trigger').click()
+//        myPhotobooth.onImage = function( dataUrl ){
+//
+//            var dataString = dataUrl.split( "," )[ 1 ];
+//            var extension = dataUrl.match(/\/(.*)\;/)[ 1 ];
+//            var avFile = new AV.File("image."+extension, { base64: dataString });
+//            avFile.save().then(function() {
+//                imgUrl = avFile.url()
+//                console.log(imgUrl)
+//                console.log('1')
+//            }, function(error) {
+//                // The file either could not be read, or could not be saved to AV.
+//            });
+//
+//
+//        };
+//    }
 
-        };
-    }
-     function facepp() {
+var facepp = function() {
 
           $('.trigger').click()
-          myPhotobooth.onImage = function( dataUrl ){
-              var dataString = dataUrl.split( "," )[ 1 ];
-              var extension = dataUrl.match(/\/(.*)\;/)[ 1 ];
-              var avFile = new AV.File("image."+extension, { base64: dataString });
-              avFile.save().then(function() {
+          myPhotobooth.onImage = function( dataUrl ) {
+              var dataString = dataUrl.split(",")[1];
+              var extension = dataUrl.match(/\/(.*)\;/)[1];
+              var avFile = new AV.File("image." + extension, {base64: dataString});
+              console.log("test")
+              avFile.save().then(function () {
                   imgUrl = avFile.url()
                   console.log(imgUrl)
-                  console.log('1')
-              }, function(error) {
+                  console.log('2')
+                  var api = new FacePP('03185d23e0c06c266049f9c6c024dd6a', 'tkDEWxFl7jl9v0ky6g3m2OtGn5KFG0Az');
+                  api.request('detection/detect', {
+                      url: imgUrl
+                  }, function (err, result) {
+                      if (err) {
+                          // TODO handle error
+//            return;
+
+                      }
+                      // TODO use result
+                      document.getElementById('response').innerHTML = JSON.stringify(result, null, 2);
+                      t=setTimeout("facepp()",1000)
+                  });
+              }, function (error) {
                   // The file either could not be read, or could not be saved to AV.
               });
 
 //              imgUrl = dataString
 
-
-          };
-      	if (i>999){
-
-      		i =985
-      	}
-//        var dataString = document.getElementById('dataUrl').value.split( "," )[ 1 ];
-
-        var api = new FacePP('03185d23e0c06c266049f9c6c024dd6a', 'tkDEWxFl7jl9v0ky6g3m2OtGn5KFG0Az');
-          console.log(imgUrl)
-         console.log('2')
-
-        api.request('detection/detect', {
-//          url: 'http://7ktrro.com1.z0.glb.clouddn.com/uniquehackdaythumb_IMG_0'+i+'_1024.jpg'
-            url:imgUrl
-        }, function(err, result) {
-          if (err) {
-            // TODO handle error
-//            return;
           }
-          // TODO use result
-          document.getElementById('response').innerHTML = JSON.stringify(result, null, 2);
-          t=setTimeout("facepp()",1000)
-          i++;
-        });
-      };
-    initapp()
-      facepp()
+
+//    if (i>999){
+//
+//        i =985
+//    }
+
+//        t=setTimeout("facepp()",1000)
+        i++;
+
+      }
+//     initapp()
+//setInterval(facepp,2000);
+        facepp()
     </script>
   </body>
 </html>
