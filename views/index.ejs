@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+   
+   
+  </head>
+  
+
+  <body>
+  <div id='example' style="width: 470px; height: 300px;"></div>
+  <div id='gallery' style="width: 470px; height: 300px;"></div>
+  <span id='dataUrl'></span>>
+
+    <pre id="response">Loading...</pre>
+    
+    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/facepp-sdk.min.js"></script>
+    <script type="text/javascript" src="/javascripts/photobooth_min.js"></script>
+    <script type="text/javascript">
+    	container = document.getElementById( "example" );
+gallery = document.getElementById( "gallery" );
+
+myPhotobooth = new Photobooth( container );
+
+myPhotobooth.onImage = function( dataUrl ){
+	var myImage = document.createElement( "img" );
+	myImage.src = dataUrl;
+	document.getElementById('dataUrl').value=dataUrl
+	gallery.appendChild( myImage );
+};
+
+     i =985;
+      function facepp() {
+      	if (i>999){
+
+      		i =985
+      	}
+        var api = new FacePP('03185d23e0c06c266049f9c6c024dd6a', 'tkDEWxFl7jl9v0ky6g3m2OtGn5KFG0Az');
+        api.request('detection/detect', {
+          url: 'http://7ktrro.com1.z0.glb.clouddn.com/uniquehackdaythumb_IMG_0'+i+'_1024.jpg'
+        }, function(err, result) {
+          if (err) {
+            // TODO handle error
+            return;
+          }
+          // TODO use result
+          document.getElementById('response').innerHTML = JSON.stringify(result, null, 2);
+          t=setTimeout("facepp()",1000)
+          i++;
+        });
+      };
+      facepp()
+    </script>
+  </body>
+</html>
