@@ -1,210 +1,102 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <style>
-          #game_div, p {
-              width: 400px;
-              margin: auto;
-              margin-top: 20px;
-          }
-      </style>
-   
-  </head>
-  
+    <!--<title><%= title %></title>-->
+    <!--<link rel='stylesheet' href='/stylesheets/style.css' />-->
+    <!--<link rel='stylesheet' href='/stylesheets/bootstrap.css' />-->
 
-  <body>
-  <div>
-      <div id='example' style="width: 470px; height: 300px;"></div>
 
-      <div style="width: 470px; height: 30px;"><form>
-              <input type="button" onclick="" value="Slowly Press Me Two Times ">
+    <!--&lt;!&ndash; Loading Flat UI &ndash;&gt;-->
+    <!--<link href="/css/flat-ui.min.css" rel="stylesheet">-->
+    <!--<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link rel="shortcut icon" href="img/favicon.ico">-->
+</head>
+<body>
+<div>
+    <div id='example' style="width: 1024px; height:768px ;" class="img-rounded img-responsive"></div>
 
-          </form>
-      </div>
-      <div id="game_div"> </div>
+    <div style="width: 470px; height: 30px;"><form>
+    <input type="button" onclick="refreshFace()" value="Slowly Press Me Two Times ">
 
-  </div>
-
+    </form>
+    </div>
+    <div id="main" style="height:400px"></div>
 
     <pre id="response">Loading...</pre>
-  <!--script src="https://cdn1.lncld.net/static/js/av-mini-0.5.4.js"></script-->
-  <script type="text/javascript" src="/javascripts/av-mini-0.5.4.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
-    <script type="text/javascript" src="/javascripts/facepp-sdk.min.js"></script>
-    <script type="text/javascript" src="/javascripts/photobooth_min.js"></script>
-  <script type="text/javascript" src="/javascripts/base64.js"></script>
-  <script type="text/javascript" src="/javascripts/phaser.min.js"></script>
-    <script type="text/javascript">
-        AV.initialize("0wuecmgwc7sg9r1np1eux3yya7lq4k7qenlpmp0qnmsnx3jm", "e65f7h0t6atg0vx1sv2pzpfz671s9ldy0r44w2ig2dgc7ir1");
-        container = document.getElementById( "example" );
-        myPhotobooth = new Photobooth( container );
-
-        // Initialize Phaser, and creates a 400x490px game
-        var game = new Phaser.Game(400, 490, Phaser.AUTO, 'game_div');
-
-        // Creates a new 'main' state that will contain the game
-        var main_state = {
-
-            // Function called first to load all the assets
-            preload: function() {
-                // Change the background color of the game
-                this.game.stage.backgroundColor = '#71c5cf';
-
-                // Load the bird sprite
-                this.game.load.image('bird', '/assets/bird.png');
-
-                // Load the pipe sprite
-                this.game.load.image('pipe', '/assets/pipe.png');
-            },
-
-            // Fuction called after 'preload' to setup the game
-            create: function() {
-                // Display the bird on the screen
+</div>
 
 
-                this.bird = this.game.add.sprite(100, 245, 'bird');
-                this.bird.events.updatePosition = new Phaser.Signal()
+<!--<pre id="response">Loading...</pre>-->
+<!--script src="https://cdn1.lncld.net/static/js/av-mini-0.5.4.js"></script-->
+<!--<script type="text/javascript" src="/javascripts/av-mini-0.5.4.js"></script>-->
+<script type="text/javascript" src="/javascripts/av-mini-0.5.4.js"></script>
+<script type="text/javascript" src="/javascripts/moment.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 
-                this.bird.events.updatePosition.add(this.movePosition,this)
+<script type="text/javascript" src="/javascripts/facepp-sdk.min.js"></script>
+<!--<script type="text/javascript" src="/javascripts/Drag.js"></script>-->
+<!--<script type="text/javascript" src="/javascripts/Tools.js"></script>-->
+<!--<script type="text/javascript" src="/javascripts/ResizeHandle.js"></script>-->
+<!--<script type="text/javascript" src="/javascripts/Slider.js"></script>-->
+<script type="text/javascript" src="/javascripts/photobooth_min.js"></script>
+<script type="text/javascript" src="/javascripts/base64.js"></script>
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
 
-                // Add gravity to the bird to make it fall
-                this.bird.body.gravity.y = 0;
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/vendor/video.js"></script>
+<script src="/js/flat-ui.min.js"></script>
+<script type="text/javascript">
+    AV.initialize("leh7mku3epwp8usqm25d0zms6unt15jglypffie1g887zrgg", "7he55r1ehtkxzc7xjisepd1flygwd5bqvwbpy4oyrquwmax2");
+    container = document.getElementById( "example" );
+    myPhotobooth = new Photobooth( container );
 
-                // Call the 'jump' function when the spacekey is hit
-                var space_key = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-                space_key.onDown.add(this.jump, this);
-
-                // Create a group of 20 pipes
-                this.pipes = game.add.group();
-                this.pipes.createMultiple(20, 'pipe');
-
-                // Timer that calls 'add_row_of_pipes' ever 1.5 seconds
-//                this.timer = this.game.time.events.loop(1500, this.add_row_of_pipes, this);
-                this.timer = this.game.time.events.loop(200, this.refreshFace, this);
-
-                this.faceData=''
-                // Add a score label on the top left of the screen
-//                this.score = 0;
-//                var style = { font: "30px Arial", fill: "#ffffff" };
-//                this.label_score = this.game.add.text(20, 20, "0", style);
-            },
-
-            // This function is called 60 times per second
-            update: function() {
-                // If the bird is out of the world (too high or too low), call the 'restart_game' function
-                if (this.bird.inWorld == false)
-                    this.restart_game();
-
-                // If the bird overlap any pipes, call 'restart_game'
-//                this.game.physics.overlap(this.bird, this.pipes, this.restart_game, null, this);
-            },
+    // Initialize Phaser, and creates a 400x490px game
 
 
+    var refreshFace = function() {
+        console.log(123)
+        $('.trigger').click()
+        myPhotobooth.onImage = function( dataUrl ) {
+            var dataString = dataUrl.split(",")[1];
+            var extension = dataUrl.match(/\/(.*)\;/)[1];
+            var avFile = new AV.File("image." + extension, {base64: dataString});
 
-            movePosition: function(faceData) {
-                // Add a vertical velocity to the bird
-//                console.log(faceData)
-//                faceData = JSON.stringify(faceData)
+            avFile.save().then(function () {
+                imgUrl = avFile.url()
+                console.log(imgUrl)
+                var api = new FacePP('03185d23e0c06c266049f9c6c024dd6a', 'tkDEWxFl7jl9v0ky6g3m2OtGn5KFG0Az');
+                api.request('detection/detect', {
+                    url: imgUrl
+                }, function (err, result) {
+                    if (err) {
+                        // TODO handle error
+                    }
+                    // TODO use result
+                    document.getElementById('response').innerHTML = JSON.stringify(result);
+                    if(result.face.length ==0){
 
-                if (faceData.face.length==0){
+                    }
+                    else{
+                        smilingValue = result.face[0].attribute.smiling.value
+                        Smiling  = new AV.Object.extend("SmilingValue")
+                        smiling = Smiling()
+                        smiling.set('value',smilingValue)
+                        smiling.save()
 
-                }
-
-                else if(faceData.face.length==1){
-                        centerx = faceData.face[0].position.center.x
-                        centery = faceData.face[0].position.center.y
-                        console.log(centerx)
-                        this.bird.reset(centerx,centery)
                     }
 
-                //this.bird.body.velocity.y = -350;
+                    t=setTimeout("refreshFace()",500)
+                });
+            }, function (error) {
+                // The file either could not be read, or could not be saved to AV.
+            });
+        }
 
-            },
+    }
+    refreshFace()
 
-            refreshFace: function() {
-                $('.trigger').click()
-                that = this
-                myPhotobooth.onImage = function( dataUrl ) {
-                    var dataString = dataUrl.split(",")[1];
-                    var extension = dataUrl.match(/\/(.*)\;/)[1];
-                    var avFile = new AV.File("image." + extension, {base64: dataString});
-
-                    avFile.save().then(function () {
-                        imgUrl = avFile.url()
-                        console.log(imgUrl)
-                        var api = new FacePP('03185d23e0c06c266049f9c6c024dd6a', 'tkDEWxFl7jl9v0ky6g3m2OtGn5KFG0Az');
-                        api.request('detection/detect', {
-                            url: imgUrl
-                        }, function (err, result) {
-                            if (err) {
-                                // TODO handle error
-                            }
-                            // TODO use result
-                            document.getElementById('response').innerHTML = JSON.stringify(result);
-//                            t=setTimeout("facepp()",1000)
-                            that.bird.events.updatePosition.dispatch(result)
-                        });
-                    }, function (error) {
-                        // The file either could not be read, or could not be saved to AV.
-                    });
-                }
-
-            },
-
-
-            // Make the bird jump
-            jump: function() {
-                // Add a vertical velocity to the bird
-                this.bird.body.velocity.y = -350;
-            },
-
-            // Restart the game
-            restart_game: function() {
-                // Remove the timer
-                this.game.time.events.remove(this.timer);
-
-                // Start the 'main' state, which restarts the game
-                this.game.state.start('main');
-            },
-
-            // Add a pipe on the screen
-            add_one_pipe: function(x, y) {
-                // Get the first dead pipe of our group
-                var pipe = this.pipes.getFirstDead();
-
-                // Set the new position of the pipe
-                pipe.reset(x, y);
-
-                // Add velocity to the pipe to make it move left
-                pipe.body.velocity.x = -200;
-
-                // Kill the pipe when it's no longer visible
-                pipe.outOfBoundsKill = true;
-            },
-
-            // Add a row of 6 pipes with a hole somewhere in the middle
-            add_row_of_pipes: function() {
-                var hole = Math.floor(Math.random()*5)+1;
-
-                for (var i = 0; i < 8; i++)
-                    if (i != hole && i != hole +1)
-                        this.add_one_pipe(400, i*60+10);
-
-                this.score += 1;
-                this.label_score.content = this.score;
-            },
-        };
-
-        // Add and start the 'main' state to start the game
-        game.state.add('main', main_state);
-        game.state.start('main');
-
-
-
-
-    </script>
-  </body>
+</script>
+</body>
 </html>
