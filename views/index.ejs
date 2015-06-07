@@ -14,14 +14,14 @@
     <!--<link rel="shortcut icon" href="img/favicon.ico">-->
 </head>
 <body>
-<div>
+<>
     <div id='example' style="width: 1024px; height:768px ;" class="img-rounded img-responsive"></div>
 
-    <div style="width: 470px; height: 30px;"><form>
+    <form>
     <input type="button" onclick="refreshFace()" value="Slowly Press Me Two Times ">
 
     </form>
-    </div>
+    
     <div id="main" style="height:400px"></div>
 
     <pre id="response">Loading...</pre>
@@ -83,6 +83,7 @@
                         Smiling  = new AV.Object.extend("SmilingValue")
                         smiling = Smiling()
                         smiling.set('value',smilingValue)
+                        smiling.set('url',imgUrl)
                         smiling.save()
 
                     }
